@@ -54,7 +54,7 @@ This project focuses on **improving supply chain efficiency** by leveraging **ma
 
 - **Key Metrics**:
   
-** ![image](https://github.com/user-attachments/assets/ed4e560f-d6ce-4baa-a0d9-db4649d66fdd)
+![image](https://github.com/user-attachments/assets/ed4e560f-d6ce-4baa-a0d9-db4649d66fdd)
 
 
 ---
