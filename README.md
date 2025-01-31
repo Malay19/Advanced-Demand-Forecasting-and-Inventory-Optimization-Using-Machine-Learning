@@ -1,16 +1,15 @@
-# 📊 **AI-Powered Demand Forecasting & Inventory Optimization** 🚀
+# 📈 **Smart Lender - Applicant Credibility Prediction** 🚀
 
-This project enhances **supply chain efficiency** by integrating **machine learning models** for **demand forecasting** and **inventory optimization**. By leveraging predictive analytics, it helps businesses **minimize costs, prevent stockouts, and optimize inventory levels** through data-driven decision-making.
+This project leverages **Machine Learning** to predict an applicant's loan approval probability based on their financial credibility. Using models like **Decision Trees, Random Forest, KNN, and XGBoost**, it helps financial institutions assess risk and reduce potential loan defaults. The best-performing model is integrated into a **Flask-based web application** for easy user interaction and deployed on **IBM Cloud**.
 
 ---
 
 ## 🌟 **Key Features**
 
-- **📈 Advanced Demand Forecasting**: Utilizes ARIMA, LSTM, and Transformer models to predict product demand with high accuracy.
-- **📦 Smart Inventory Optimization**: Implements **EOQ** and **Safety Stock** calculations to determine optimal order quantities.
-- **💰 Cost Efficiency Analysis**: Evaluates **holding and ordering costs** to enhance financial decision-making.
-- **📊 Data-Driven Insights**: Generates **interactive dashboards** and **detailed reports** for real-time monitoring and strategy refinement.
-- **🖥️ Scalable & User-Friendly**: Designed for easy data input, visualization, and seamless integration with supply chain systems.
+- 🔢 **ML-Based Credit Risk Assessment**: Predicts loan approval based on applicant data.
+- 📊 **Model Comparison & Optimization**: Implements **Decision Trees, Random Forest, KNN, and XGBoost**, selecting the best model.
+- 🛠️ **Flask Web Interface**: Provides a user-friendly UI for applicants to check loan eligibility.
+- 💾 **Scalable & Deployable**: Deployed using **IBM Cloud**, making it accessible for real-world use.
 
 ---
 
@@ -18,43 +17,70 @@ This project enhances **supply chain efficiency** by integrating **machine learn
 
 - **Programming Language**: Python 🐍
 - **Libraries**:
-  - **Pandas & NumPy**: For data manipulation and numerical computations.
-  - **Matplotlib, Seaborn & Plotly**: For static and interactive visualizations.
-  - **Statsmodels & Scikit-learn**: For statistical and machine learning models.
-  - **TensorFlow/Keras**: For deep learning-based forecasting (LSTM, Transformers).
-- **Data Storage**: CSV files (expandable to MySQL/PostgreSQL).
-- **Cloud Platforms**: Compatible with AWS, Google Cloud, and Azure ☁️.
+  - **Pandas & NumPy**: For data processing and numerical analysis.
+  - **Scikit-learn**: For machine learning models.
+  - **Flask**: For web app development.
+  - **Matplotlib & Seaborn**: For data visualization.
+- **Deployment**:
+  - **Flask** for the web interface.
+  - **IBM Cloud** for hosting.
 
 ---
 
-## 📋 **Methodology**
+## 📄 **Project Structure**
 
-1. **🧹 Data Preprocessing**: Clean and structure raw supply chain data.
-2. **🔮 Demand Forecasting**: Apply **ARIMA, LSTM, and Transformer models** to predict future demand.
-3. **📉 Inventory Optimization**: Compute **EOQ and Safety Stock** to balance supply and demand.
-4. **📊 Insights & Reporting**: Create **interactive dashboards** and **visualizations** for decision-making.
-
----
-
-## 📂 **Key Outputs**
-
-- **CSV Files**:
-  - `optimized_inventory.csv`: Optimal inventory parameters for each SKU.
-  - `cost_analysis.csv`: Breakdown of holding and ordering costs.
-- **Visualizations**:
-  - **📊 Safety Stock Distribution**: Histogram showcasing SKU-level safety stock.
-  - **📈 Cost vs. EOQ**: Relationship between Economic Order Quantity and inventory costs.
-  - **📉 Demand Forecasting Trends**: Forecasted vs. actual demand comparison.
-  - **💰 Revenue Analysis**: Bar charts analyzing revenue by customer and product.
-  - **⏱️ Lead Time Optimization**: Impact of transportation modes on lead times.
+1. **Flask** - Contains the Flask code to run the web application.
+2. **ideation_phase** - Includes the Empathy Map and Brainstorming Map for problem understanding.
+3. **project_design_phase** - Covers solution architecture, proposed solution, and data flow diagrams.
+4. **project_planning_phase** - Defines the technology stack and project roadmap.
+5. **project_manual_and_code** - Stores the core project code and documentation.
+6. **project_video** - Contains a video explanation of the project.
 
 ---
 
-## 🚀 **How to Use the Project**
+## 🚀 **How to Install and Run the Project**
 
 1. **Clone the Repository**:
    ```bash
-   git clone https://github.com/your-username/demand-forecasting-inventory-optimization.git
-   cd demand-forecasting-inventory-optimization
-2. Access the project code on **Google Colab**:  
-🔗 [Colab Link](https://colab.research.google.com/drive/1EHJ3MnVA3v58g9QradRSbT8b5mCq4lwp?usp=sharing)
+   git clone https://github.com/your-username/smart-lender.git
+   cd smart-lender
+   ```
+2. **Install Dependencies**:
+   ```bash
+   pip install -r requirements.txt
+   ```
+3. **Run Flask Application**:
+   ```bash
+   python app.py
+   ```
+4. **Access Web Interface**:
+   - Open a browser and go to: [http://127.0.0.1:5000](http://127.0.0.1:5000)
+
+---
+
+## 📐 **How to Use the Project**
+
+- Enter loan applicant details in the web interface.
+- Click **Submit** to check loan approval prediction.
+- Review the result based on the trained model.
+- For a detailed walkthrough, check the **project_video** folder.
+
+---
+
+## 📊 **Key Outputs**
+
+- **Loan Approval Prediction**: Displays whether an applicant is likely to get a loan.
+- **Model Performance Metrics**: Compares accuracy, precision, recall, and F1-score of ML models.
+- **Data Insights & Visualizations**: Provides graphical representations of applicant trends.
+
+---
+
+## 📚 **Future Enhancements**
+
+- Integration of **Deep Learning** models for enhanced prediction.
+- Expansion of datasets for increased accuracy.
+- Deployment on **AWS/Azure** for scalability.
+
+---
+
+💪 **Contributions & Feedback Welcome!** 💪
