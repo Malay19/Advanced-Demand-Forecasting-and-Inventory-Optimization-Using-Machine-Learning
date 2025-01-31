@@ -1,0 +1,127 @@
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+from statsmodels.tsa.holtwinters import SimpleExpSmoothing
+from scipy.stats import norm
+import plotly.express as px
+from plotly.subplots import make_subplots
+import plotly.graph_objects as go
+
+# Load dataset
+grouped_data = pd.read_csv('supply_chain_data.csv')
+
+def calculate_demand_variability(data):
+    return data['Number of products sold'].std()
+
+def calculate_safety_stock(lead_time, demand_variability, service_level=0.95):
+    Z_score = norm.ppf(service_level)
+    return Z_score * demand_variability * (lead_time ** 0.5)
+
+def calculate_eoq(demand, ordering_cost, holding_cost):
+    return (2 * ordering_cost * demand / holding_cost) ** 0.5
+
+def calculate_inventory_cost(demand, holding_cost, ordering_cost, safety_stock):
+    eoq = calculate_eoq(demand, ordering_cost, holding_cost)
+    total_ordering_cost = (demand / eoq) * ordering_cost if eoq else 0
+    total_holding_cost = ((eoq / 2) + safety_stock) * holding_cost
+    return total_holding_cost + total_ordering_cost
+
+demand_variability = calculate_demand_variability(grouped_data)
+grouped_data['Safety Stock'] = grouped_data.apply(
+    lambda row: calculate_safety_stock(row['Lead times'], demand_variability), axis=1
+)
+
+holding_cost_per_unit = 5
+ordering_cost = 100
+
+grouped_data['EOQ'] = grouped_data.apply(
+    lambda row: calculate_eoq(row['Number of products sold'], ordering_cost, holding_cost_per_unit), axis=1
+)
+grouped_data['Inventory Cost'] = grouped_data.apply(
+    lambda row: calculate_inventory_cost(
+        row['Number of products sold'], holding_cost_per_unit, ordering_cost, row['Safety Stock']
+    ), axis=1
+)
+
+def forecast_demand(data, sku):
+    sku_data = data[data['SKU'] == sku]
+    if len(sku_data) < 2:
+        return sku_data['Number of products sold'].mean()
+    try:
+        model = SimpleExpSmoothing(sku_data['Number of products sold'].values)
+        model_fit = model.fit()
+        return model_fit.forecast(steps=1)[0]
+    except:
+        return sku_data['Number of products sold'].mean()
+
+grouped_data['Forecasted Demand'] = grouped_data['SKU'].apply(lambda sku: forecast_demand(grouped_data, sku))
+
+def calculate_required_order(row):
+    return max(0, row['Forecasted Demand'] - row['Stock levels'] + row['Safety Stock'])
+
+def calculate_reorder_point(row):
+    return row['Forecasted Demand'] * row['Lead times'] + row['Safety Stock']
+
+grouped_data['Required Order Quantity'] = grouped_data.apply(calculate_required_order, axis=1)
+grouped_data['Reorder Point'] = grouped_data.apply(calculate_reorder_point, axis=1)
+
+grouped_data.to_csv('inventory_optimization_results.csv', index=False)
+
+summary_stats = {
+    "Average Safety Stock": grouped_data['Safety Stock'].mean(),
+    "Average EOQ": grouped_data['EOQ'].mean(),
+    "Average Inventory Cost": grouped_data['Inventory Cost'].mean(),
+    "Average Forecasted Demand": grouped_data['Forecasted Demand'].mean(),
+    "Total Required Order Quantity": grouped_data['Required Order Quantity'].sum(),
+    "Total Inventory Cost": grouped_data['Inventory Cost'].sum()
+}
+
+summary_stats_df = pd.DataFrame(list(summary_stats.items()), columns=['Metric', 'Value'])
+summary_stats_df.to_csv('inventory_summary_statistics.csv', index=False)
+
+plt.figure(figsize=(12, 6))
+plt.hist(grouped_data['Safety Stock'], bins=20, color='blue', alpha=0.7)
+plt.title('Distribution of Safety Stock')
+plt.xlabel('Safety Stock')
+plt.ylabel('Frequency')
+plt.show()
+
+plt.figure(figsize=(10, 6))
+plt.scatter(grouped_data['EOQ'], grouped_data['Inventory Cost'], color='green', alpha=0.7)
+plt.title('Inventory Cost vs. EOQ')
+plt.xlabel('EOQ')
+plt.ylabel('Inventory Cost')
+plt.show()
+
+supply_data = pd.read_csv("supply_chain_data.csv")
+if 'EOQ' not in supply_data.columns:
+    supply_data['EOQ'] = (2 * supply_data['Order quantities'] * ordering_cost / holding_cost_per_unit) ** 0.5
+
+top_10_comparison = supply_data[['SKU', 'EOQ', 'Order quantities']].head(10)
+fig = px.bar(top_10_comparison, x='SKU', y=['EOQ', 'Order quantities'],
+             title='Comparison of EOQ and Order Quantities for Top 10 SKUs',
+             labels={'value': 'Quantity', 'variable': 'Metric'},
+             barmode='group')
+fig.update_layout(title_x=0.5, xaxis_title="SKU", yaxis_title="Quantity", legend_title="Metric")
+fig.show()
+
+revenue_avg_by_demo_prod = supply_data.groupby(['Customer demographics', 'Product type'])['Revenue generated'].mean().reset_index()
+revenue_sum_by_demo_prod = supply_data.groupby(['Customer demographics', 'Product type'])['Revenue generated'].sum().reset_index()
+colors = px.colors.qualitative.Set3
+fig = make_subplots(rows=1, cols=2, subplot_titles=('Average Revenue', 'Total Revenue'))
+for i, product_type in enumerate(revenue_avg_by_demo_prod['Product type'].unique()):
+    subset = revenue_avg_by_demo_prod[revenue_avg_by_demo_prod['Product type'] == product_type]
+    fig.add_trace(go.Bar(x=subset['Customer demographics'], y=subset['Revenue generated'], name=product_type, marker_color=colors[i]), row=1, col=1)
+for i, product_type in enumerate(revenue_sum_by_demo_prod['Product type'].unique()):
+    subset = revenue_sum_by_demo_prod[revenue_sum_by_demo_prod['Product type'] == product_type]
+    fig.add_trace(go.Bar(x=subset['Customer demographics'], y=subset['Revenue generated'], showlegend=False, marker_color=colors[i]), row=1, col=2)
+fig.update_layout(title='Revenue Analysis by Customer Demographics and Product Type', xaxis=dict(title='Customer Demographics'), yaxis=dict(title='Revenue'), xaxis2=dict(title='Customer Demographics'), yaxis2=dict(title='Revenue'), title_x=0.5, showlegend=True)
+fig.show()
+
+avg_lead_times_transport = supply_data.groupby(['Transportation modes'])['Lead times'].mean().reset_index()
+fig = px.bar(avg_lead_times_transport, x='Transportation modes', y='Lead times',
+             labels={'Transportation modes': 'Transportation Mode', 'Lead times': 'Average Lead Time'},
+             title='Average Lead Times by Transportation Mode')
+fig.update_traces(marker_color=px.colors.qualitative.Set3)
+fig.update_layout(title=dict(text='Average Lead Times by Transportation Mode', x=0.5), xaxis_title='Transportation Mode', yaxis_title='Average Lead Time', xaxis_tickangle=-45, font=dict(family="Arial", size=14), showlegend=False)
+fig.show()
