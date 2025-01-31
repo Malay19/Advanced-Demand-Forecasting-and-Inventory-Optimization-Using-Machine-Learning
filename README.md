@@ -1,6 +1,5 @@
-# 📊 Advanced Demand Forecasting and Inventory Optimization Using Machine Learning 🚀
+![image](https://github.com/user-attachments/assets/683e3d4e-2691-432d-bf3f-5f6ba9e262b8)# 📊 Advanced Demand Forecasting and Inventory Optimization Using Machine Learning 🚀
 
-![Project Banner](https://via.placeholder.com/1200x400) <!-- Add a banner image if available -->
 
 This project focuses on **improving supply chain efficiency** by leveraging **machine learning models** for **demand forecasting** and **inventory optimization**. The goal is to help businesses minimize operational costs, reduce stockouts, and optimize inventory levels by accurately predicting future demand and determining the most cost-effective order quantities.
 
