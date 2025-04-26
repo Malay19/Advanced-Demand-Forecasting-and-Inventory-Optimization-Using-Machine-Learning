@@ -108,7 +108,7 @@ This project delivers an end-to-end solution for supply chain optimization by co
    ```
 3. **Launch the Streamlit Dashboard:**:
    ```bash
-   python inventory_optimization.py
+   python app.py
    ```
 4. **Access the project on Google Colab**:
    🔗 [Colab Link](https://colab.research.google.com/drive/1EHJ3MnVA3v58g9QradRSbT8b5mCq4lwp?usp=sharing)
